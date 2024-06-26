@@ -1,1 +1,1 @@
-require 'nrakochy/init'
+require 'nrakochy'
