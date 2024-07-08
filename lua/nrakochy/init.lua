@@ -48,7 +48,9 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-fugitive', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-fugitive',
+  'rhysd/git-messenger.vim',
+  'junegunn/gv.vim',
   'theprimeagen/vim-be-good', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
@@ -344,6 +346,12 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+            command = 'silent! EslintFixAll',
+            group = vim.api.nvim_create_augroup('MyAutocmdsJavaScripFormatting', {}),
+          })
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -381,22 +389,22 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        eslint = {},
         dhall_lsp_server = {},
-        -- clangd = {},
+        hls = {},
         gopls = {},
-        -- pyright = {},
+        markdown_oxide = {},
+        nil_ls = {
+          formatting = { command = { 'nix fmt' } },
+          nix = { flake = { autoArchive = true } },
+        },
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         -- https://github.com/pmizio/typescript-tools.nvim,
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {},
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes = { ...},
-          -- capabilities = {},
           settings = {
             Lua = {
               completion = {
@@ -534,6 +542,7 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.confirm { select = true },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
