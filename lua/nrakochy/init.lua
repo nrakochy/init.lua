@@ -252,7 +252,7 @@ require('lazy').setup({
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
+      'nrakochy/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -394,10 +394,7 @@ require('lazy').setup({
         hls = {},
         gopls = {},
         markdown_oxide = {},
-        nil_ls = {
-          formatting = { command = { 'nix fmt' } },
-          nix = { flake = { autoArchive = true } },
-        },
+
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -440,11 +437,26 @@ require('lazy').setup({
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            server.cabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
         },
       }
+
+      -- local nixd_config = vim.tbl_deep_extend('force', capabilities, {
+      --   cmd = { 'nixd' },
+      --   settings = {
+      --     nixd = {
+      --       nixpkgs = {
+      --         expr = 'import ./flake.nix { }',
+      --       },
+      --       formatting = {
+      --         command = { 'nixpkgs-fmt' },
+      --       },
+      --     },
+      --   },
+      -- })
+      require('lspconfig').nixd.setup {}
     end,
   },
 
