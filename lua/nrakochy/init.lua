@@ -263,6 +263,9 @@ require('lazy').setup({
       -- used for completion, annotations and signatures of Neovim apis
       { 'folke/neodev.nvim', opts = {} },
     },
+    opts = {
+      autoformat = false,
+    },
     config = function()
       -- Brief aside: **What is LSP?**
       --
@@ -379,6 +382,10 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+      local nixd_config = {}
+      nixd_config = vim.tbl_deep_extend('force', capabilities, nixd_config)
+      require('lspconfig').nixd.setup(nixd_config)
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -429,7 +436,6 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -442,21 +448,6 @@ require('lazy').setup({
           end,
         },
       }
-
-      -- local nixd_config = vim.tbl_deep_extend('force', capabilities, {
-      --   cmd = { 'nixd' },
-      --   settings = {
-      --     nixd = {
-      --       nixpkgs = {
-      --         expr = 'import ./flake.nix { }',
-      --       },
-      --       formatting = {
-      --         command = { 'nixpkgs-fmt' },
-      --       },
-      --     },
-      --   },
-      -- })
-      require('lspconfig').nixd.setup {}
     end,
   },
 
