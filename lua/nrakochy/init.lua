@@ -1,11 +1,5 @@
 require 'nrakochy/remap'
 
--- Set codeium server
-vim.cmd [[let g:codeium_server_config = {
-  \'portal_url': 'https://codeium.anduril.dev',
-  \'api_url': 'https://codeium.anduril.dev/_route/api_server' }
-]]
-
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
